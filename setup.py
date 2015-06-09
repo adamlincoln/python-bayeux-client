@@ -11,6 +11,6 @@ setup(name='python-bayeux-client',
       url='http://github.com/dkmadigan/python-bayeux-client',
       license="LICENSE.txt",
       long_description=open('README.md').read(),
-      install_requires=['zope.interface','twisted.internet'],
+      install_requires=['twisted'],
       packages=['bayeux']
      )
