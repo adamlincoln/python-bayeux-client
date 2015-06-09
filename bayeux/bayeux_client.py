@@ -28,7 +28,7 @@ class BayeuxClient(object):
         subscriptions: Set of active subscriptions
         lock: Concurrency lock
     """
-    def __init__(self, server):
+    def __init__(self, server, token=None):
         """Initialize the client.
 
         Args:
@@ -46,7 +46,7 @@ class BayeuxClient(object):
         self.connected = False
         self.subscriptions = set()
         self.lock = RLock()
-        self.sender = BayeuxMessageSender(self.server, self.receiver)
+        self.sender = BayeuxMessageSender(self.server, self.receiver, token)
         self.receiver.register(bayeux_constants.HANDSHAKE_CHANNEL, 
             self._handshake_cb)
         self.receiver.register(bayeux_constants.CONNECT_CHANNEL, 
