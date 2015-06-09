@@ -20,7 +20,7 @@ class BayeuxMessageSender(object):
         server: The bayeux server to send messages to
         receiver: The message receiver
     """
-    def __init__(self, server, receiver):
+    def __init__(self, server, receiver, token=None):
         """Initialize the message sender.
 
         Args:
@@ -32,6 +32,7 @@ class BayeuxMessageSender(object):
         self.msg_id = 0
         self.server = server
         self.receiver = receiver
+        self.token = token
 
     def connect(self, errback=None):
         """Sends a connect request message to the server
@@ -95,10 +96,15 @@ class BayeuxMessageSender(object):
                 during sending.
         """
         def do_send():
+            headers = {'Content-Type': ['application/x-www-form-urlencoded'],
+                       'Host': [self.server]}
+
+            if self.token is not None:
+                headers['Authorization'] = ['Bearer {0}'.format(self.token)]
+
             d = self.agent.request('POST',
                 self.server,
-                Headers({'Content-Type': ['application/x-www-form-urlencoded'],
-                    'Host': [self.server]}),
+                Headers(headers),
                 BayeuxProducer(str(message)))
 
             def cb(response):
